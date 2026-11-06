@@ -1,0 +1,60 @@
+'use strict';
+// Disposable profile and mocked responses only: never reads a personal browser or real Key.
+const {chromium}=require('playwright');
+const fs=require('node:fs'),os=require('node:os'),path=require('node:path'),assert=require('node:assert/strict');
+const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-panels-test');fs.mkdirSync(out,{recursive:true});
+(async()=>{
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'bookmark-ai-panels-')),ext=path.join(temp,'extension');fs.cpSync(path.join(root,'extension'),ext,{recursive:true});
+ const manifest=JSON.parse(fs.readFileSync(path.join(ext,'manifest.json')));manifest.host_permissions=manifest.optional_host_permissions;fs.writeFileSync(path.join(ext,'manifest.json'),JSON.stringify(manifest));let ctx;
+ try{
+  ctx=await chromium.launchPersistentContext(path.join(temp,'profile'),{channel:'chromium',headless:true,args:['--disable-extensions-except='+ext,'--load-extension='+ext],ignoreDefaultArgs:['--disable-extensions'],viewport:{width:1440,height:1000}});
+  await ctx.route(/^https?:/,route=>route.abort());const worker=ctx.serviceWorkers()[0]||await ctx.waitForEvent('serviceworker');
+  await worker.evaluate(()=>{globalThis.mockCalls=[];globalThis.mockFail=false;chrome.permissions.contains=async()=>true;globalThis.fetch=async(url,options)=>{const body=String(options.body||'');mockCalls.push({url:String(url),body});if(mockFail||new Headers(options.headers).get('Authorization')!=='Bearer test-only-panel-key')return new Response(JSON.stringify({error:{message:'Synthetic rejected Key'}}),{status:401});if(body.includes('合成失败资料'))return new Response(JSON.stringify({error:{message:'Synthetic bad request'}}),{status:400});const category=body.includes('合成新主题资料')?'测试新主题':'学习与研究';const answer=JSON.stringify({category,subcategory:'研究资料',tags:['示例'],reason:'根据合成标题与网址整理',confidence:.94});return new Response(JSON.stringify({choices:[{message:{content:answer},finish_reason:'stop'}]}),{status:200,headers:{'Content-Type':'application/json'}});};});
+  const p=await ctx.newPage(),errors=[];p.on('pageerror',e=>errors.push(e.message));await p.goto('chrome-extension://'+new URL(worker.url()).host+'/newtab.html');await p.locator('#aiActivityLaunch').waitFor();
+  await p.evaluate(()=>{window.permissionRequests=0;chrome.permissions.request=async()=>{permissionRequests++;return true;};window.sentTypes=[];const original=chrome.runtime.sendMessage.bind(chrome.runtime);chrome.runtime.sendMessage=(...args)=>{sentTypes.push(args[0]?.type);return original(...args);};});
+  const state=()=>worker.evaluate(()=>BookmarkAI.state());const settings=()=>worker.evaluate(()=>BookmarkAI.settings());
+  const advanced=async()=>{if(!await p.locator('#aiAdvanced').evaluate(d=>d.open))await p.locator('#aiAdvanced > summary').click();};
+  const tab=async name=>{await p.locator('#aiTab-'+name).click();assert.equal(await p.locator('#aiTab-'+name).getAttribute('aria-selected'),'true');assert(await p.locator('#aiPanel-'+name).isVisible());for(const other of ['review','completed','failed'].filter(t=>t!==name))assert(!await p.locator('#aiPanel-'+other).isVisible());};
+  await p.locator('#aiLaunch').click();await p.locator('#aiKey').waitFor({state:'visible'});
+  assert.equal(await p.locator('#aiDialog #aiRun, #aiDialog #aiStop, #aiDialog #aiRetry, #aiDialog #aiReviews, #aiDialog #aiCompleted, #aiDialog #aiFailures').count(),0);
+  assert.equal(await p.locator('#aiAdvanced').evaluate(d=>d.open),false);assert.equal(await p.locator('#aiConsent').isChecked(),false);
+  for(const id of ['aiPreset','aiModel','aiMode','aiLimit','aiEnabled','aiGrant','aiClearKey','aiSave','aiTest'])assert(!await p.locator('#'+id).isVisible(),id+' should be hidden initially');
+  assert(await p.locator('#aiConnect').isVisible());assert(await p.locator('#aiProvider').isVisible());
+  await p.locator('#aiKey').fill('test-only-panel-key');
+  if(await p.locator('#aiConnect').isEnabled())await p.locator('#aiConnect').click();
+  assert.equal(await p.evaluate(()=>permissionRequests),0);assert.equal(await worker.evaluate(()=>mockCalls.length),0);
+  await p.locator('#aiConsent').check();await worker.evaluate(()=>{mockFail=true;});await p.locator('#aiConnect').click();
+  await p.waitForFunction(()=>document.querySelector('#aiError').textContent.trim().length>0&&!document.querySelector('#aiConnect').disabled);
+  assert.equal((await settings()).enabled,false);assert((await state()).settings.hasKey);assert.equal(await p.locator('#aiKey').inputValue(),'');assert.equal(await worker.evaluate(()=>mockCalls.length),1);
+  // A blank Key input reuses the saved local Key, including after a failed connection test.
+  await worker.evaluate(()=>{mockFail=false;});await p.locator('#aiConnect').click();
+  const connectDeadline=Date.now()+10000;let connected=false;while(Date.now()<connectDeadline){connected=(await settings()).enabled;if(connected)break;await new Promise(resolve=>setTimeout(resolve,25));}assert(connected,'Successful connection did not enable automatic work');
+  await p.waitForFunction(()=>!document.querySelector('#aiConnect').disabled);assert((await state()).settings.hasKey);assert.equal(await p.locator('#aiKey').inputValue(),'');assert.equal(await worker.evaluate(()=>mockCalls.length),2);assert.equal(await p.evaluate(()=>permissionRequests),2);
+  await worker.evaluate(()=>{mockCalls=[];});
+  await p.locator('#aiKey').fill('test-only-panel-key');await p.locator('#aiConsent').check();await advanced();await p.locator('#aiEnabled').check();await p.locator('#aiLimit').fill('17');await p.locator('#aiSave').click();await p.waitForFunction(()=>document.querySelector('#aiNotice').textContent.includes('已保存'));
+  const saved=await settings();assert(saved.enabled);assert.equal(saved.dailyLimit,17);await p.locator('#aiAdvanced > summary').click();await p.screenshot({path:path.join(out,'desktop-settings.png')});
+  await p.locator('#aiClose').click();await p.locator('#aiActivityLaunch').click();await p.locator('#aiActivityDialog').waitFor({state:'visible'});
+  assert.equal(await p.locator('#aiActivityDialog input, #aiActivityDialog select, #aiActivityDialog #aiSave, #aiActivityDialog #aiTest').count(),0);
+  assert.deepEqual(await settings(),saved);assert.equal(await worker.evaluate(()=>mockCalls.length),0);
+  await p.locator('#aiOpenSettings').click();await p.locator('#aiDialog').waitFor({state:'visible'});await advanced();await p.locator('#aiEnabled').uncheck();await p.locator('#aiSave').click();await p.waitForFunction(()=>document.querySelector('#aiNotice').textContent.includes('自动整理未开启'));await p.locator('#aiViewResults').click();await p.locator('#aiActivityDialog').waitFor({state:'visible'});
+  const ids=await p.evaluate(async()=>{await BookmarkClassifier.saveSettings({...await BookmarkClassifier.settings(),enabled:false});const ids={};for(const [name,title,url]of [['done','合成完成资料','https://example.org/panel-done'],['review','合成新主题资料','https://example.net/panel-review'],['failed','合成失败资料','https://example.com/panel-failed']])ids[name]=(await chrome.bookmarks.create({title,url})).id;await bookmarkConnection.refresh();return ids;});
+  const beforeRun=await settings();await p.evaluate(()=>{sentTypes=[];});await p.locator('#aiRun').click();
+  const deadline=Date.now()+15000;let settled=false;while(Date.now()<deadline){settled=await p.evaluate(async ids=>{const rows=await Promise.all(Object.values(ids).map(id=>BookmarkDB.get('ai:'+id)));return rows[0]?.state==='done'&&rows[1]?.state==='review'&&rows[2]?.state==='failed';},ids);if(settled)break;await new Promise(resolve=>setTimeout(resolve,50));}assert(settled,'Expected done/review/failed records were not produced');
+  assert.deepEqual(await settings(),beforeRun);assert.equal((await settings()).enabled,false);assert.equal(await p.evaluate(()=>sentTypes.filter(t=>t==='ai-save').length),0);assert.equal(await worker.evaluate(()=>mockCalls.length),3);
+  const result=await state();assert.equal(result.reviewCount,1);assert.equal(result.completedCount,1);assert.equal(result.failedCount,1);
+  // An arriving review changes its count without stealing the user's current result tab.
+  assert.equal(await p.locator('#aiTab-completed').getAttribute('aria-selected'),'true');await tab('review');await p.locator('#aiAccept-'+ids.review).waitFor({state:'visible'});assert((await p.locator('#aiReviews').innerText()).includes('测试新主题'));
+  await tab('completed');assert((await p.locator('#aiCompleted').innerText()).includes('合成完成资料'));const link=p.locator('#aiCompleted a').first();assert.equal(await link.getAttribute('href'),'https://example.org/panel-done');assert.equal(await link.getAttribute('target'),'_blank');
+  await tab('failed');assert((await p.locator('#aiFailures').innerText()).includes('合成失败资料'));await p.locator('#aiTab-failed').press('ArrowRight');assert.equal(await p.locator('#aiTab-review').getAttribute('aria-selected'),'true');
+  await p.locator('#aiActivityClose').click();await p.locator('#aiActivityLaunch').click();assert.equal(await p.locator('#aiTab-review').getAttribute('aria-selected'),'true');await p.screenshot({path:path.join(out,'desktop-activity.png')});
+  // Unsubmitted form edits must survive Continue, and never leak into task operations after Discard.
+  await p.locator('#aiOpenSettings').click();await p.locator('#aiDialog').waitFor({state:'visible'});assert.equal(await p.locator('#aiKey').inputValue(),'');assert((await p.locator('#aiKey').getAttribute('placeholder')).includes('已保存'));
+  await advanced();await p.locator('#aiLimit').fill('18');await p.locator('#aiViewResults').click();await p.locator('#aiUnsaved').waitFor({state:'visible'});assert(!await p.locator('#aiActivityDialog').isVisible());await p.locator('#aiKeepEditing').click();assert.equal(await p.locator('#aiLimit').inputValue(),'18');assert.equal((await settings()).dailyLimit,17);
+  await p.locator('#aiViewResults').click();await p.locator('#aiDiscardSettings').click();await p.locator('#aiActivityDialog').waitFor({state:'visible'});assert.deepEqual(await settings(),beforeRun);
+  await p.locator('#aiOpenSettings').click();await p.locator('#aiDialog').waitFor({state:'visible'});assert.equal(await p.locator('#aiLimit').inputValue(),'17');await advanced();await p.locator('#aiLimit').fill('19');await p.locator('#aiViewResults').click();await p.locator('#aiSaveLeave').click();await p.locator('#aiActivityDialog').waitFor({state:'visible'});assert.equal((await settings()).dailyLimit,19);assert.equal((await settings()).enabled,false);
+  await p.setViewportSize({width:390,height:844});await p.waitForFunction(()=>document.documentElement.scrollWidth<=innerWidth);assert.equal(await p.locator('#aiActivityDialog').evaluate(d=>d.scrollWidth>d.clientWidth),false);await p.screenshot({path:path.join(out,'narrow-activity.png')});
+  await p.locator('#aiOpenSettings').click();await p.locator('#aiDialog').waitFor({state:'visible'});assert.equal(await p.locator('#aiDialog').evaluate(d=>d.scrollWidth>d.clientWidth),false);await p.screenshot({path:path.join(out,'narrow-settings.png')});await p.locator('#aiClose').click();
+  assert.deepEqual(errors,[]);assert(!(await p.locator('body').innerText()).includes('test-only-panel-key'));
+  const report={environment:'Disposable Chromium, synthetic bookmarks, fake Key, mocked service responses; page network blocked',simpleFirstScreenAdvancedCollapsed:true,consentRequiredBeforePermissionOrRequest:true,failedConnectionRetainsKeyAndDisablesAutomatic:true,successfulConnectionReusesSavedKeyAndEnablesAutomatic:true,settingsAndTaskControlsSeparated:true,savedConfigurationPreservedAcrossPanels:true,oneOffUsesSavedConfigurationWithoutSavingOrEnabling:true,reviewCompletedFailedTabs:true,newResultsDoNotStealTab:true,firstOpenPrioritizesReview:true,resultTitlesOpenOriginalPage:true,unsavedContinueDiscardSaveLeave:true,narrowNoOverflow:true,errors};fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
+ }finally{if(ctx)await ctx.close();fs.rmSync(temp,{recursive:true,force:true});}
+})().catch(e=>{console.error(e);process.exitCode=1;});

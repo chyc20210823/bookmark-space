@@ -56,7 +56,7 @@ async function test(){
 async function stop(){currentRequest=null;runningRevision=null;testingRevision=null;const s=await settings();await DB().set(CONFIG,{...s,enabled:false,revision:s.revision+1});controller?.abort();await DB().remove('aiBatch');await chrome.alarms.clear(ALARM);await DB().set('aiStatus',{state:'paused',message:'已停止自动整理，现有分类保留。'});}
 async function batch(){const s=await settings();await ready(s);await DB().set('aiBatch',{active:true,revision:s.revision});run().catch(()=>{});return {ok:true};}
 async function retry(){if(running)throw new Error('请先停止当前任务，再重试失败项。');const rows=await DB().entries('ai:');await DB().deleteMany(rows.filter(([,r])=>['failed','retry','processing'].includes(r.state)).map(([k])=>k));return batch();}
-async function approve(id){const key='ai:'+String(id),r=await DB().get(key);if(r?.state!=='review')throw new Error('该建议已变化，请重新打开设置。');const n=(await chrome.bookmarks.get(String(id)))[0];const all=BookmarkClassifier.flatten(await chrome.bookmarks.getTree()),row=all.find(v=>v.id===String(id));if(!n||!row||BookmarkClassifier.fingerprint(row)!==r.fingerprint)throw new Error('收藏已经变化，请重新分类。');const m=(await DB().get('management'))?.metadata?.[id];if(m?.url===row.url&&m.manual!==false)throw new Error('该收藏已有手动分类，建议不会覆盖。');await DB().set(key,{...r,state:'done',accepted:true});await BookmarkClassifier.run(false,true);}
+async function approve(id){const key='ai:'+String(id),r=await DB().get(key);if(r?.state!=='review')throw new Error('该建议已变化，请重新打开 AI 整理。');const n=(await chrome.bookmarks.get(String(id)))[0];const all=BookmarkClassifier.flatten(await chrome.bookmarks.getTree()),row=all.find(v=>v.id===String(id));if(!n||!row||BookmarkClassifier.fingerprint(row)!==r.fingerprint)throw new Error('收藏已经变化，请重新分类。');const m=(await DB().get('management'))?.metadata?.[id];if(m?.url===row.url&&m.manual!==false)throw new Error('该收藏已有手动分类，建议不会覆盖。');await DB().set(key,{...r,state:'done',accepted:true});await BookmarkClassifier.run(false,true);}
 async function dismiss(id){const key='ai:'+String(id),r=await DB().get(key);if(r?.state==='review')await DB().set(key,{...r,state:'dismissed'});}
 function cached(record,row){return record?.state==='done'&&record.fingerprint===BookmarkClassifier.fingerprint(row)?{category:record.result.category,subcategory:record.result.subcategory,tags:record.result.tags,classification:{source:'ai',status:'classified',provider:record.provider,model:record.model,reasons:[record.result.reason],confidence:record.result.confidence}}:null;}
 const itemLabels={done:'AI 已分类',review:'待确认',dismissed:'保留原分类',manual:'手动分类',rule:'规则分类',imported:'沿用已有', 'skipped-private':'私密或特殊链接 · 跳过 AI',off:'AI 未开启',unconfigured:'未配置 AI',consent:'待确认授权',permission:'待授权连接',queued:'等待 AI',running:'AI 分类中',retry:'等待重试',error:'需处理',quota:'达到今日请求上限'};
@@ -71,7 +71,7 @@ async function overviewSnapshot(){
  const block=!configured?'unconfigured':!s.consent?'consent':!permitted?'permission':blockedNow?'error':!active?(batchQuota?'quota':'off'):null;
  const liveTesting=testing&&testingRevision===s.revision&&!['unconfigured','consent','permission','error'].includes(block);
  const items={},counts={total:rows.length,eligible:0};for(const key of Object.keys(itemLabels))counts[key]=0;
- const reviews=[],failures=[];
+ const reviews=[],failures=[],completed=[];
  for(let i=0;i<rows.length;i++){
   const row=rows[i],id=String(row.id),fp=BookmarkClassifier.fingerprint(row),base=classes[i]?.fingerprint===fp?classes[i].result:null,m=management?.metadata?.[id],record=records[i],same=record?.fingerprint===fp;
   const live=!!(running&&active&&runningRevision===s.revision&&currentRequest?.revision===s.revision&&currentRequest.id===id&&currentRequest.fingerprint===fp&&same&&record.signature===signature(s)&&record.state==='processing');
@@ -80,12 +80,12 @@ async function overviewSnapshot(){
   else if(base?.classification?.source==='user-rule')kind='rule';
   else if(base?.classification?.source==='imported')kind='imported';
   else if(!safeInput(row))kind='skipped-private';
-  else if(same&&['done','review','dismissed'].includes(record.state)){kind=record.state;if(kind==='review')reviews.push({id,title:row.title,result:record.result});}
+  else if(same&&['done','review','dismissed'].includes(record.state)){kind=record.state;if(kind==='review')reviews.push({id,title:row.title,url:row.url,result:record.result});if(kind==='done')completed.push({id,title:row.title,url:row.url,result:record.result,updatedAt:record.updatedAt||0});}
   else if(s.mode==='pending'&&base?.classification?.status==='classified')kind='rule';
   else{
    counts.eligible++;
    const failed=same&&record.signature===signature(s)&&record.state==='failed';
-   if(failed)failures.push({title:row.title,message:record.message});
+   if(failed)failures.push({id,title:row.title,url:row.url,message:record.message});
    if(live&&!block)kind='running';
    else if(block)kind=block;
    else if(u.count>=s.dailyLimit)kind='quota';
@@ -98,12 +98,12 @@ async function overviewSnapshot(){
  let global=block;
  if(liveTesting)global='testing';
  else if(!global){if(counts.running)global='running';else if(counts.quota)global='quota';else if(counts.queued||counts.retry)global='queued';else if(reviews.length)global='review';else if(failures.length)global='error';else global='idle';}
- const notes={off:'自动 AI 整理已关闭，可在设置中按需整理一次。',unconfigured:'请在 AI 分类中选择服务、模型并保存自己的 API Key。',consent:'请在 AI 分类中确认发送范围后再开始。',permission:'请在 AI 分类中点击“授权连接”，允许连接所选服务。',idle:s.enabled?'当前范围没有等待 AI 处理的收藏；新增收藏会按设置处理。':'当前范围没有等待 AI 处理的收藏。',queued:counts.retry?'部分请求稍后重试，其余符合条件的收藏继续排队。':'符合条件的收藏正在排队；一次任务也可在关闭页面后继续。',running:'正在处理符合条件的收藏，已有分类仍可使用。',review:'有分类建议等待确认，可在 AI 分类中采用或保留原分类。',error:blockedNow?'服务拒绝调用，请检查 Key、账户权限或余额，保存配置后重试。':'部分分类请求未完成，可在 AI 分类中查看并重试。',quota:s.enabled?'今日请求次数已达上限，自动整理将于明日继续。':'今日请求次数已达上限，明日可手动重新整理。',testing:'正在测试所选服务连接，测试会计入今日请求次数。'};
+ const notes={off:'自动整理已关闭，可在“AI 整理”中按需执行一次。',unconfigured:'请在 AI 设置中选择服务、模型并保存自己的 API Key。',consent:'请在 AI 设置中确认发送范围后再开始。',permission:'请在 AI 设置中点击“授权连接”，允许连接所选服务。',idle:s.enabled?'当前范围没有等待 AI 处理的收藏；新增收藏会按设置处理。':'当前范围没有等待 AI 处理的收藏。',queued:counts.retry?'部分请求稍后重试，其余符合条件的收藏继续排队。':'符合条件的收藏正在排队；一次任务也可在关闭页面后继续。',running:'正在处理符合条件的收藏，已有分类仍可使用。',review:'有分类建议等待确认，可在 AI 整理中采用或保留原分类。',error:blockedNow?'服务拒绝调用，请检查 Key、账户权限或余额，保存配置后重试。':'部分分类请求未完成，可在 AI 整理中查看并重试。',quota:s.enabled?'今日请求次数已达上限，自动整理将于明日继续。':'今日请求次数已达上限，明日可手动重新整理。',testing:'正在测试所选服务连接，测试会计入今日请求次数。'};
  const overview={state:global,label:global==='idle'&&!s.enabled?'本次整理已完成':globalLabels[global],note:notes[global],counts,items,usage:{count:u.count,limit:s.dailyLimit},reviewCount:reviews.length,failedCount:failures.length};
- return {overview,settings:s,usage:u,reviews,failures};
+ return {overview,settings:s,usage:u,reviews,failures,completed:completed.sort((a,b)=>b.updatedAt-a.updatedAt)};
 }
 async function overview(){return (await overviewSnapshot()).overview;}
-async function state(){const snap=await overviewSnapshot();return {settings:publicSettings(snap.settings),usage:snap.usage,status:await DB().get('aiStatus'),overview:snap.overview,reviews:snap.reviews.slice(0,20),reviewCount:snap.overview.reviewCount,failedCount:snap.overview.failedCount,failures:snap.failures.slice(0,5)};}
+async function state(){const snap=await overviewSnapshot();return {settings:publicSettings(snap.settings),usage:snap.usage,status:await DB().get('aiStatus'),overview:snap.overview,reviews:snap.reviews.slice(0,20),reviewCount:snap.overview.reviewCount,failedCount:snap.overview.failedCount,failures:snap.failures.slice(0,5),completed:snap.completed.slice(0,20),completedCount:snap.completed.length};}
 
 async function schedule(when=Date.now()+60000){await chrome.alarms.create(ALARM,{when});}
 async function scheduleTomorrow(){const tomorrow=new Date();tomorrow.setDate(tomorrow.getDate()+1);tomorrow.setHours(0,1,0,0);await schedule(tomorrow.getTime());}

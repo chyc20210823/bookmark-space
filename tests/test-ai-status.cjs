@@ -23,8 +23,10 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
   await p.goto('chrome-extension://'+new URL(worker.url()).host+'/newtab.html');
   await p.waitForFunction(()=>window.BookmarkActions?.available&&window.bookmarkConnection?.refresh&&window.BookmarkAIView?.refresh);
   const send=(type,extra={})=>p.evaluate(async message=>{const reply=await chrome.runtime.sendMessage(message);if(!reply?.ok)throw new Error(reply?.error||'Message failed');return reply.value;},{type,...extra});
+  const waitDB=async(predicate,arg)=>{const deadline=Date.now()+10000;while(Date.now()<deadline){if(await p.evaluate(predicate,arg))return;await new Promise(resolve=>setTimeout(resolve,25));}throw new Error('Database condition did not settle');};
   const refresh=()=>p.evaluate(()=>BookmarkAIView.refresh());
   const globalState=async expected=>{try{await p.waitForFunction(state=>document.querySelector('#aiSummary')?.dataset.state===state,expected,{timeout:7000});}catch{throw new Error('Expected AI summary '+expected+', actual '+await p.locator('#aiSummary').getAttribute('data-state')+'; worker '+(await send('ai-overview')).state);}assert((await p.locator('#aiSummary').innerText()).trim());};
+  const summaryRoute=async target=>{await p.locator('#aiSummary').click();await p.locator(target==='settings'?'#aiDialog':'#aiActivityDialog').waitFor({state:'visible'});assert.equal(await p.evaluate(()=>document.querySelectorAll('dialog[open]').length),1);await p.locator(target==='settings'?'#aiClose':'#aiActivityClose').click();};
   const itemState=async(id,expected)=>{await p.waitForFunction(({id,expected})=>[...document.querySelectorAll('.ai-item-status[data-ai-id]')].some(el=>el.dataset.aiId===id&&el.dataset.aiState===expected),{id,expected});};
   const waitHeld=async()=>{const deadline=Date.now()+10000;while(Date.now()<deadline){if(await worker.evaluate(()=>mockHeld.length>0))return;await new Promise(r=>setTimeout(r,25));}throw new Error('Mock request did not start');};
   const resolveNext=async text=>{await waitHeld();await worker.evaluate(text=>mockHeld.shift().resolve(mockResponse(text)),text);};
@@ -41,11 +43,11 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
    await chrome.runtime.sendMessage({type:'classify',force:true});await bookmarkConnection.refresh();
    await BookmarkActions.save(getBookmarks().find(row=>row.id===result.manual.id),{category:'手动主题',subcategory:'人工保留'});await bookmarkConnection.refresh();return result;
   });
-  await globalState('unconfigured');await itemState(fixture.a.id,'unconfigured');await itemState(fixture.private.id,'skipped-private');
+  await globalState('unconfigured');await summaryRoute('settings');await itemState(fixture.a.id,'unconfigured');await itemState(fixture.private.id,'skipped-private');
   await itemState(fixture.manual.id,'manual');await itemState(fixture.rule.id,'rule');await itemState(fixture.custom.id,'rule');
-  await save({consent:false});await globalState('consent');await itemState(fixture.a.id,'consent');
-  await save({consent:true});await globalState('permission');await itemState(fixture.a.id,'permission');
-  await worker.evaluate(()=>{mockAllowed=true;});await refresh();await globalState('off');await itemState(fixture.a.id,'off');
+  await save({consent:false});await globalState('consent');await summaryRoute('settings');await itemState(fixture.a.id,'consent');
+  await save({consent:true});await globalState('permission');await summaryRoute('settings');await itemState(fixture.a.id,'permission');
+  await worker.evaluate(()=>{mockAllowed=true;});await refresh();await globalState('off');await summaryRoute('activity');await itemState(fixture.a.id,'off');
   assert.equal(await worker.evaluate(()=>mockCalls.length),0);
   // A connection check is real worker work, represented as testing without classifying anything.
   await p.evaluate(()=>{window.pendingConnectionTest=chrome.runtime.sendMessage({type:'ai-test'});});
@@ -57,7 +59,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
   await p.screenshot({path:path.join(out,'running.png')});
   await resolveNext(classification());await waitHeld();await itemState(fixture.a.id,'done');await itemState(fixture.b.id,'running');
   await resolveNext(classification('状态测试新主题'));
-  await p.waitForFunction(async id=>(await BookmarkDB.get('ai:'+id))?.state==='review',fixture.b.id);await globalState('review');await itemState(fixture.b.id,'review');
+  await waitDB(async id=>(await BookmarkDB.get('ai:'+id))?.state==='review',fixture.b.id);await globalState('review');await summaryRoute('activity');await itemState(fixture.b.id,'review');
   const overview=await send('ai-overview');assert.equal(overview.reviewCount,1);assert(!JSON.stringify(overview).includes('test-only-status-key'));
   assert.equal(await worker.evaluate(()=>mockCalls.length),3); // One connection check and two eligible bookmarks.
   await send('ai-dismiss',{id:fixture.b.id});await itemState(fixture.b.id,'dismissed');await globalState('idle');
@@ -65,7 +67,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
   await save({enabled:false});
   const errorRow=await p.evaluate(async()=>{const row=await chrome.bookmarks.create({title:'状态失败样例',url:'https://example.org/status-error'});await chrome.runtime.sendMessage({type:'classify',force:true});await bookmarkConnection.refresh();return row;});
   await worker.evaluate(()=>{mockMode='forbidden';});await save({enabled:true});await send('ai-run');
-  await p.waitForFunction(async id=>(await BookmarkDB.get('ai:'+id))?.state==='failed',errorRow.id);await globalState('error');await itemState(errorRow.id,'error');
+  await waitDB(async id=>(await BookmarkDB.get('ai:'+id))?.state==='failed',errorRow.id);await globalState('error');await itemState(errorRow.id,'error');
   // The daily cap blocks new calls and reports quota, rather than pretending work continues.
   await save({enabled:false,dailyLimit:1});
   const quotaRow=await p.evaluate(async()=>{const row=await chrome.bookmarks.create({title:'状态额度样例',url:'https://example.net/status-quota'});await chrome.runtime.sendMessage({type:'classify',force:true});await bookmarkConnection.refresh();return row;});
@@ -87,7 +89,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
   const stopRow=await p.evaluate(async()=>{const row=await chrome.bookmarks.create({title:'停止后不应分类',url:'https://example.org/status-stop'});await chrome.runtime.sendMessage({type:'classify',force:true});await bookmarkConnection.refresh();return row;});
   await save({enabled:false});await send('ai-run');await waitHeld();await globalState('running');await itemState(stopRow.id,'running');
   await send('ai-stop');await globalState('off');await itemState(stopRow.id,'off');await resolveNext(classification());
-  await p.waitForFunction(async id=>(await BookmarkDB.get('ai:'+id))?.state!=='processing',stopRow.id);await globalState('off');await itemState(stopRow.id,'off');
+  await waitDB(async id=>(await BookmarkDB.get('ai:'+id))?.state!=='processing',stopRow.id);await globalState('off');await itemState(stopRow.id,'off');
   assert.notEqual(await p.evaluate(id=>getBookmarks().find(r=>r.id===id)?.classification?.source,stopRow.id),'ai');
   // A stale processing record must not be displayed as a live request after a worker restart.
   await worker.evaluate(async id=>{const rows=BookmarkClassifier.flatten(await chrome.bookmarks.getTree()),row=rows.find(r=>r.id===id);await BookmarkDB.set('ai:'+id,{state:'processing',fingerprint:BookmarkClassifier.fingerprint(row),signature:'stale',title:row.title,provider:'deepseek',model:'deepseek-flash',updatedAt:0});},stopRow.id);
@@ -106,7 +108,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
   await globalState('queued');await send('ai-stop');await globalState('off');
   assert.deepEqual(errors,[]);
   await p.setViewportSize({width:390,height:844});await p.waitForFunction(()=>document.documentElement.scrollWidth<=innerWidth);await p.screenshot({path:path.join(out,'narrow-summary.png')});
-  const report={environment:'Disposable Chromium; synthetic bookmarks, fake Key and mocked worker fetch; real network blocked',unconfiguredConsentPermissionOff:true,testingState:true,queuedRunningAndDone:true,reviewAndDismiss:true,privateManualAndRulesProtected:true,errorAndQuota:true,automaticQuotaResumesTomorrow:true,oneOffQuotaDoesNotAutoResume:true,oneOffRunsWhileAutomaticOff:true,automaticResumesAfterConnectionTest:true,stopDiscardsLateResponse:true,staleProcessingNotRunning:true,publicStateAndDOMContainNoKey:true,eventDrivenNoPeriodicOverviewRequests:true,narrowOverflow:false,errors};
+  const report={environment:'Disposable Chromium; synthetic bookmarks, fake Key and mocked worker fetch; real network blocked',summaryRoutesSetupToSettingsAndOthersToActivity:true,unconfiguredConsentPermissionOff:true,testingState:true,queuedRunningAndDone:true,reviewAndDismiss:true,privateManualAndRulesProtected:true,errorAndQuota:true,automaticQuotaResumesTomorrow:true,oneOffQuotaDoesNotAutoResume:true,oneOffRunsWhileAutomaticOff:true,automaticResumesAfterConnectionTest:true,stopDiscardsLateResponse:true,staleProcessingNotRunning:true,publicStateAndDOMContainNoKey:true,eventDrivenNoPeriodicOverviewRequests:true,narrowOverflow:false,errors};
   fs.writeFileSync(path.join(out,'report.json'),JSON.stringify(report,null,2));console.log(JSON.stringify(report));
  }finally{if(ctx)await ctx.close();fs.rmSync(temp,{recursive:true,force:true});}
 })().catch(error=>{console.error(error);process.exitCode=1;});
