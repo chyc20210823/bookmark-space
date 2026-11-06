@@ -43,7 +43,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
    await chrome.runtime.sendMessage({type:'classify',force:true});await bookmarkConnection.refresh();
    await BookmarkActions.save(getBookmarks().find(row=>row.id===result.manual.id),{category:'手动主题',subcategory:'人工保留'});await bookmarkConnection.refresh();return result;
   });
-  await globalState('unconfigured');await summaryRoute('settings');await itemState(fixture.a.id,'unconfigured');await itemState(fixture.private.id,'skipped-private');
+  await globalState('unconfigured');await summaryRoute('settings');await itemState(fixture.a.id,'unconfigured');await itemState(fixture.private.id,'needs-scope');
   await itemState(fixture.manual.id,'manual');await itemState(fixture.rule.id,'rule');await itemState(fixture.custom.id,'rule');
   await save({consent:false});await globalState('consent');await summaryRoute('settings');await itemState(fixture.a.id,'consent');
   await save({consent:true});await globalState('permission');await summaryRoute('settings');await itemState(fixture.a.id,'permission');
@@ -55,7 +55,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'artifacts','ai-statu
   const connection=await p.evaluate(()=>window.pendingConnectionTest);assert(connection.ok);await globalState('off');
   await save({enabled:true});await globalState('queued');await itemState(fixture.a.id,'queued');await itemState(fixture.b.id,'queued');
   await send('ai-run');await waitHeld();await globalState('running');await itemState(fixture.a.id,'running');await itemState(fixture.b.id,'queued');
-  for(const [key,state]of [['private','skipped-private'],['manual','manual'],['rule','rule'],['custom','rule']])await itemState(fixture[key].id,state);
+  for(const [key,state]of [['private','needs-scope'],['manual','manual'],['rule','rule'],['custom','rule']])await itemState(fixture[key].id,state);
   await p.screenshot({path:path.join(out,'running.png')});
   await resolveNext(classification());await waitHeld();await itemState(fixture.a.id,'done');await itemState(fixture.b.id,'running');
   await resolveNext(classification('状态测试新主题'));

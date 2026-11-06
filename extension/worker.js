@@ -11,7 +11,7 @@ chrome.permissions.onAdded.addListener(classify);
 chrome.alarms.onAlarm.addListener(alarm=>{if(alarm.name===BookmarkAI.ALARM)BookmarkAI.run();});
 chrome.runtime.onMessage.addListener((message,sender,reply)=>{
  if(sender.id!==chrome.runtime.id)return;
- const handlers={'ai-state':()=>BookmarkAI.state(),'ai-overview':()=>BookmarkAI.overview(),'ai-save':async()=>{const saved=await BookmarkAI.save(message.value);if(saved.enabled&&message.start!==false)BookmarkAI.run();return saved;},'ai-test':()=>BookmarkAI.test(),'ai-run':()=>BookmarkAI.batch(),'ai-stop':()=>BookmarkAI.stop(),'ai-retry':()=>BookmarkAI.retry(),'ai-approve':()=>BookmarkAI.approve(message.id),'ai-dismiss':()=>BookmarkAI.dismiss(message.id)};
+ const handlers={'ai-state':()=>BookmarkAI.state(),'ai-overview':()=>BookmarkAI.overview(),'ai-enable-minimal':()=>BookmarkAI.enableMinimal(),'ai-save':async()=>{const saved=await BookmarkAI.save(message.value);if(saved.enabled&&message.start!==false)BookmarkAI.run();return saved;},'ai-test':()=>BookmarkAI.test(),'ai-run':()=>BookmarkAI.batch(),'ai-stop':()=>BookmarkAI.stop(),'ai-retry':()=>BookmarkAI.retry(),'ai-approve':()=>BookmarkAI.approve(message.id),'ai-dismiss':()=>BookmarkAI.dismiss(message.id)};
  if(handlers[message?.type]){Promise.resolve().then(handlers[message.type]).then(value=>reply({ok:true,value}),e=>reply({ok:false,error:e.message}));return true;}
  if(message?.type==='classify'){BookmarkClassifier.run(!!message.force).then(()=>reply({ok:true}),e=>reply({ok:false,error:e.message}));return true;}
 });

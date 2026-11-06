@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "收藏空间",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "点击扩展查看收藏；本机规则、图谱和编辑，可选配置六家AI服务辅助分类。无需服务器。",
   "permissions": [
     "bookmarks",
