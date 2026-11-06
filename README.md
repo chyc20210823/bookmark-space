@@ -4,9 +4,51 @@
 
 这是 **0.5.0 Beta**。点击扩展图标打开收藏空间，不替换新标签页。不接 AI 也能使用；无需部署服务器或安装数据库。
 
-![收藏空间首页，使用八条公开示例制作的演示画面](docs/demo.png)
+[![收藏图谱实录：分类展开到具体文章，再查看详情](docs/graph-demo.gif)](https://github.com/chyc20210823/bookmark-space/blob/main/docs/walkthrough.mp4)
 
-上图使用合成收藏演示。安装后显示的是你自己的浏览器收藏。
+**[观看完整操作视频（约 25 秒）](https://github.com/chyc20210823/bookmark-space/blob/main/docs/walkthrough.mp4)** · [安装方法](#安装) · [配置 AI](#配置-ai) · [隐私说明](PRIVACY.md)
+
+动态图和视频均来自真实插件操作，使用 22 条公开网站组成的示例收藏，不含个人书签或 Key。演示采用本机规则，没有调用 AI。安装后显示你自己的浏览器收藏。
+
+## 先看效果
+
+### 收藏图谱：从主题找到具体文章
+
+点击大类进入子类，再展开到文章节点；点击文章查看详情，可以继续打开原网页。画布支持拖动、缩放和沉浸查看。
+
+![收藏图谱总览：按主题聚合收藏](docs/graph-overview.png)
+
+![展开编程开发和 Python，找到三条具体收藏](docs/graph-articles.png)
+
+### 分类规则：不接 AI，也能自动整理
+
+内置 89 条规则，结合标题、域名、网址路径和原文件夹分类。你也可以添加自己的规则。下面把 `example.com` 归入「学习与研究 / 待读资料」，保存后这条示例收藏就完成了归类。
+
+![添加域名分类规则](docs/rules-settings.png)
+
+![收藏详情展示自定义规则命中依据](docs/rule-result.png)
+
+<details>
+<summary>查看规则保存结果和内置规则列表</summary>
+
+![规则保存后，已归类从 18 条变成 19 条](docs/rules-saved.png)
+
+![内置规则可逐条停用](docs/rules-builtins.png)
+
+</details>
+
+### 收藏首页与详情
+
+最近收藏放在最前面，下面按卡片浏览。标题直接打开网页，“查看详情”显示分类依据，并提供编辑、删除入口。
+
+![收藏首页与最近收藏](docs/demo.png)
+
+<details>
+<summary>查看文章详情弹窗</summary>
+
+![文章详情展示分类来源和打开原网页入口](docs/article-detail.png)
+
+</details>
 
 ## 可以做什么
 
@@ -77,6 +119,8 @@ npm run test:browser
 ```
 
 这些测试使用临时浏览器配置和合成收藏，不接触你的日常 Chrome 数据，不使用真实 API Key，不产生模型费用。扩展测试按 [Playwright 官方方法](https://playwright.dev/docs/chrome-extensions) 启动 Chromium。
+
+复现演示截图和录屏见 [演示素材说明](docs/DEMO.md)。
 
 贡献方式见 [CONTRIBUTING.md](CONTRIBUTING.md)，测试范围见 [docs/VALIDATION.md](docs/VALIDATION.md)。提交问题时请使用虚构收藏，别贴 Key、完整书签导出或私人网址。
 
