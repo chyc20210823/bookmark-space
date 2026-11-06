@@ -1,9 +1,9 @@
 'use strict';
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict'),{spawnSync}=require('node:child_process');
 const root=path.resolve(__dirname,'..');
-const extensionFiles=['app.js','rules-ui.js','graph.css','seed.js','manage.css','manage-ui.js','manifest.json','ai.css','ai-ui.js','ai-classifier.js','classifier.js','newtab.html','manage-store.js','rules.css','sync.js','worker.js','ai-providers.js','rule-engine.js','graph.js','database.js'];
-const mediaFiles=['docs/demo.png','docs/graph-overview.png','docs/graph-articles.png','docs/article-detail.png','docs/rules-settings.png','docs/rules-saved.png','docs/rules-builtins.png','docs/rule-result.png','docs/graph-demo.gif','docs/walkthrough.mp4'];
-const otherFiles=['README.md','PRIVACY.md','CONTRIBUTING.md','SECURITY.md','CHANGELOG.md','LICENSE','.gitignore','package.json','package-lock.json','docs/VALIDATION.md','docs/DEMO.md','scripts/capture-demo.cjs',...mediaFiles,'tests/run.cjs','tests/rule-fixtures.json','tests/test-rules.cjs','tests/test-ai-providers.cjs','tests/test-ai-queue.cjs','tests/test-ai-extension.cjs','tests/test-writeback.cjs','tests/test-links.cjs','scripts/check-release.cjs','.github/workflows/test.yml'];
+const extensionFiles=['category-picker.js','app.js','rules-ui.js','graph.css','seed.js','manage.css','manage-ui.js','manifest.json','ai.css','ai-ui.js','ai-classifier.js','classifier.js','newtab.html','manage-store.js','rules.css','sync.js','worker.js','ai-providers.js','rule-engine.js','graph.js','database.js'];
+const mediaFiles=['docs/category-picker.png','docs/demo.png','docs/graph-overview.png','docs/graph-articles.png','docs/article-detail.png','docs/rules-settings.png','docs/rules-saved.png','docs/rules-builtins.png','docs/rule-result.png','docs/graph-demo.gif','docs/walkthrough.mp4'];
+const otherFiles=['README.md','PRIVACY.md','CONTRIBUTING.md','SECURITY.md','CHANGELOG.md','LICENSE','.gitignore','package.json','package-lock.json','docs/VALIDATION.md','docs/DEMO.md','scripts/capture-demo.cjs',...mediaFiles,'tests/test-usability.cjs','tests/run.cjs','tests/rule-fixtures.json','tests/test-rules.cjs','tests/test-ai-providers.cjs','tests/test-ai-queue.cjs','tests/test-ai-extension.cjs','tests/test-writeback.cjs','tests/test-links.cjs','scripts/check-release.cjs','.github/workflows/test.yml'];
 const allowed=new Set([...extensionFiles.map(n=>'extension/'+n),...otherFiles]);
 const ignored=new Set(['.git','node_modules','test-results','playwright-report','artifacts','dist']);
 const found=[];

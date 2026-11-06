@@ -1,6 +1,6 @@
 {
   "name": "bookmark-space",
-  "version": "0.5.0-beta.1",
+  "version": "0.5.1-beta.1",
   "private": true,
   "description": "本机优先的浏览器收藏管理扩展，规则分类、图谱与可选 AI 分类。",
   "license": "MIT",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "test": "node tests/run.cjs",
-    "test:browser": "node tests/test-ai-extension.cjs && node tests/test-writeback.cjs && node tests/test-links.cjs",
+    "test:browser": "node tests/test-ai-extension.cjs && node tests/test-writeback.cjs && node tests/test-links.cjs && node tests/test-usability.cjs",
     "check:release": "node scripts/check-release.cjs"
   },
   "devDependencies": {

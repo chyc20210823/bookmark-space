@@ -47,7 +47,7 @@ async function test(){if(running||testing)throw new Error('已有 AI 任务正�
 async function stop(){const s=await settings();await DB().set(CONFIG,{...s,enabled:false,revision:s.revision+1});controller?.abort();await DB().remove('aiBatch');await chrome.alarms.clear(ALARM);await DB().set('aiStatus',{state:'paused',message:'已停止自动整理，现有分类保留。'});}
 async function batch(){const s=await settings();await ready(s);await DB().set('aiBatch',{active:true,revision:s.revision});run().catch(()=>{});return {ok:true};}
 async function retry(){if(running)throw new Error('请先停止当前任务，再重试失败项。');const rows=await DB().entries('ai:');await DB().deleteMany(rows.filter(([,r])=>['failed','retry','processing'].includes(r.state)).map(([k])=>k));return batch();}
-async function approve(id){const key='ai:'+String(id),r=await DB().get(key);if(r?.state!=='review')throw new Error('该建议已变化，请重新打开设置。');const n=(await chrome.bookmarks.get(String(id)))[0];const all=BookmarkClassifier.flatten(await chrome.bookmarks.getTree()),row=all.find(v=>v.id===String(id));if(!n||!row||BookmarkClassifier.fingerprint(row)!==r.fingerprint)throw new Error('收藏已经变化，请重新分类。');const m=(await DB().get('management'))?.metadata?.[id];if(m?.url===row.url)throw new Error('该收藏已有手动分类，建议不会覆盖。');await DB().set(key,{...r,state:'done',accepted:true});await BookmarkClassifier.run(false,true);}
+async function approve(id){const key='ai:'+String(id),r=await DB().get(key);if(r?.state!=='review')throw new Error('该建议已变化，请重新打开设置。');const n=(await chrome.bookmarks.get(String(id)))[0];const all=BookmarkClassifier.flatten(await chrome.bookmarks.getTree()),row=all.find(v=>v.id===String(id));if(!n||!row||BookmarkClassifier.fingerprint(row)!==r.fingerprint)throw new Error('收藏已经变化，请重新分类。');const m=(await DB().get('management'))?.metadata?.[id];if(m?.url===row.url&&m.manual!==false)throw new Error('该收藏已有手动分类，建议不会覆盖。');await DB().set(key,{...r,state:'done',accepted:true});await BookmarkClassifier.run(false,true);}
 async function dismiss(id){const key='ai:'+String(id),r=await DB().get(key);if(r?.state==='review')await DB().set(key,{...r,state:'dismissed'});}
 function cached(record,row){return record?.state==='done'&&record.fingerprint===BookmarkClassifier.fingerprint(row)?{category:record.result.category,subcategory:record.result.subcategory,tags:record.result.tags,classification:{source:'ai',status:'classified',provider:record.provider,model:record.model,reasons:[record.result.reason],confidence:record.result.confidence}}:null;}
 async function state(){const s=await settings(),records=await DB().entries('ai:');const reviews=records.filter(([,r])=>r.state==='review').slice(0,20).map(([k,r])=>({id:k.slice(3),title:r.title,result:r.result}));return {settings:publicSettings(s),usage:await usage(),status:await DB().get('aiStatus'),reviews,reviewCount:records.filter(([,r])=>r.state==='review').length,failedCount:records.filter(([,r])=>r.state==='failed').length,failures:records.filter(([,r])=>r.state==='failed').slice(0,5).map(([,r])=>({title:r.title,message:r.message}))};}
@@ -59,7 +59,7 @@ async function run(){
  const classes=await DB().getMany(rows.map(r=>'class:'+r.id)),records=await DB().getMany(rows.map(r=>'ai:'+r.id));
  const taxonomy=[...new Set([...BookmarkRules.categories,...classes.filter((c,i)=>safeInput(rows[i])).map(c=>c?.result.category).filter(Boolean)])].slice(0,60);
  const queue=[];let privateCount=0;for(let i=0;i<rows.length;i++){
- const row=rows[i],base=classes[i]?.result,prior=records[i],fp=BookmarkClassifier.fingerprint(row);if(manual[row.id]?.url===row.url||['manual','user-rule','imported'].includes(base?.classification?.source))continue;
+ const row=rows[i],base=classes[i]?.result,prior=records[i],fp=BookmarkClassifier.fingerprint(row);if((manual[row.id]?.url===row.url&&manual[row.id].manual!==false)||['manual','user-rule','imported'].includes(base?.classification?.source))continue;
  if(!safeInput(row)){privateCount++;continue;}
  if(prior?.fingerprint===fp&&['done','review','dismissed'].includes(prior.state))continue;
  if(s.mode==='pending'&&base?.classification?.status==='classified')continue;
@@ -83,7 +83,7 @@ async function run(){
  const latest=await settings();if(latest.revision!==s.revision){await DB().remove(key);break;}
  let native;try{native=(await chrome.bookmarks.get(row.id))[0];}catch{await DB().remove(key);continue;}
  const freshRows=BookmarkClassifier.flatten(await chrome.bookmarks.getTree()),fresh=freshRows.find(r=>r.id===row.id),m=(await DB().get('management'))?.metadata?.[row.id];
- if(!native||!fresh||BookmarkClassifier.fingerprint(fresh)!==fp||m?.url===fresh.url){await DB().remove(key);continue;}
+ if(!native||!fresh||BookmarkClassifier.fingerprint(fresh)!==fp||(m?.url===fresh.url&&m.manual!==false)){await DB().remove(key);continue;}
  const nowRules=BookmarkRules.classify(fresh,{...await BookmarkClassifier.settings(),enabled:true});if(nowRules.classification?.source==='user-rule'){await DB().remove(key);continue;}
  await DB().set(key,{...record,state:result.newCategory||result.confidence<.8||result.category==='待分类'?'review':'done',result,updatedAt:Date.now()});completed++;
  await BookmarkClassifier.run(false,true);

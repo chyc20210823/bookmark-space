@@ -89,6 +89,7 @@ async function decorate(rows){
  return rows.map(row=>{
   const saved=data.metadata[String(row.id)];
   if(!saved||saved.url!==String(row.url))return {...row,_localRevision:0};
+  if(saved.manual===false)return {...row,tags:[...(saved.tags||[])],_localRevision:saved.revision||saved.updatedAt||0};
   const view=saved.presentation||{},out={...row,...view,category:saved.category,subcategory:saved.subcategory,tags:[...(saved.tags||[])],shortTitle:String(row.title||row.shortTitle||'未命名收藏'),manualClassification:true,classification:{source:'manual',status:'classified',reasons:['已由你手动指定，自动整理不会覆盖。']},_localRevision:saved.revision||saved.updatedAt||0};
   // Never weaken a private marker obtained from live URL checks or earlier data.
   out.private=!!(row.private||view.private);
@@ -104,7 +105,11 @@ function checkLocalVersion(snapshot,current,data){
 async function save(snapshot,changes={}){return exclusive(async()=>{
  const current=await checked(snapshot),values=fields(snapshot,changes,current),data=await read(),before=clone(data);
  checkLocalVersion(snapshot,current,data);
- data.metadata[String(current.id)]=metadataFor(snapshot,values,current);
+ const saved=data.metadata[String(current.id)],sameSaved=saved?.url===String(current.url),classificationChanged=values.category!==(snapshot.category||'待确认')||values.subcategory!==(snapshot.subcategory||'其他');
+ const tagsChanged=JSON.stringify(values.tags)!==JSON.stringify(snapshot.tags||[]);
+ if(classificationChanged||(sameSaved&&saved.manual!==false))data.metadata[String(current.id)]=metadataFor(snapshot,values,current);
+ else if(tagsChanged||sameSaved)data.metadata[String(current.id)]={url:values.url,tags:values.tags,manual:false,revision:token(),updatedAt:Date.now()};
+ // Unchanged automatic metadata must not become a manual classification just because the title changed.
  await write(data); // Verify durable storage before modifying the native bookmark.
  let updated=current;
  try{const patch={};if(values.title!==String(current.title))patch.title=values.title;if(values.url!==String(current.url))patch.url=values.url;if(Object.keys(patch).length)updated=await api.update(String(current.id),patch);}
@@ -113,11 +118,11 @@ async function save(snapshot,changes={}){return exclusive(async()=>{
  });}
 function token(){return root.crypto?.randomUUID?.()||Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);}
 function prune(data){const completed=data.trash.filter(t=>t.status==='restored').sort((a,b)=>(b.restoredAt||0)-(a.restoredAt||0));const keep=new Set(completed.slice(0,30).map(t=>t.token));data.trash=data.trash.filter(t=>t.status!=='restored'||keep.has(t.token));}
-async function deleted(){const data=await read();return data.trash.filter(t=>t.status!=='restored').sort((a,b)=>b.deletedAt-a.deletedAt).map(t=>({token:t.token,title:t.node.title,url:t.node.url,deletedAt:t.deletedAt,status:t.status,private:!!t.metadata?.presentation?.private,parentId:t.node.parentId,folder:t.folder||'',category:t.metadata?.category||'待确认',subcategory:t.metadata?.subcategory||'其他',tags:[...(t.metadata?.tags||[])]}));}
+async function deleted(){const data=await read();return data.trash.filter(t=>t.status!=='restored').sort((a,b)=>b.deletedAt-a.deletedAt).map(t=>({token:t.token,title:t.node.title,url:t.node.url,deletedAt:t.deletedAt,status:t.status,private:!!(t.private||t.metadata?.presentation?.private),parentId:t.node.parentId,folder:t.folder||'',category:t.metadata?.category||'待确认',subcategory:t.metadata?.subcategory||'其他',tags:[...(t.metadata?.tags||[])]}));}
 async function remove(snapshot){return exclusive(async()=>{
  const current=await checked(snapshot),data=await read();
  checkLocalVersion(snapshot,current,data);
- const values=fields(snapshot,{},current),saved=data.metadata[String(current.id)],entry={token:token(),status:'pending-delete',deletedAt:Date.now(),folder:Array.isArray(snapshot.folder)?snapshot.folder.join(' / '):String(snapshot.folder||''),node:{id:String(current.id),parentId:String(current.parentId),index:current.index,title:String(current.title||''),url:String(current.url),dateAdded:current.dateAdded},metadata:saved&&saved.url===current.url?clone(saved):metadataFor(snapshot,values,current)};
+ const values=fields(snapshot,{},current),saved=data.metadata[String(current.id)],entry={token:token(),status:'pending-delete',deletedAt:Date.now(),private:!!(snapshot.private||saved?.presentation?.private),folder:Array.isArray(snapshot.folder)?snapshot.folder.join(' / '):String(snapshot.folder||''),node:{id:String(current.id),parentId:String(current.parentId),index:current.index,title:String(current.title||''),url:String(current.url),dateAdded:current.dateAdded},metadata:saved&&saved.url===current.url?clone(saved):metadataFor(snapshot,values,current)};
  data.trash.push(entry);prune(data);await write(data);
  try{await api.remove(String(current.id));}catch{data.trash=data.trash.filter(t=>t.token!==entry.token);try{await write(data);}catch{emit();throw failure('Chrome 未完成删除，备份记录已保留。请核对原收藏后再操作。');}emit();throw failure('Chrome 未能删除这条收藏，原收藏未被本页移除。请刷新后重试。');}
  entry.status='deleted';delete data.metadata[String(current.id)];
