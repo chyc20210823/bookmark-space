@@ -1,0 +1,1632 @@
+{
+  "description": "人工构造的公开功能验收样本，覆盖正常、歧义及边界情况；不代表真实用户收藏分类准确率。预期分类由样本意图独立指定，未从引擎输出生成。",
+  "cases": [
+    {
+      "id": "case-001",
+      "row": {
+        "title": "RecyclerView 滑动实现",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-002",
+      "row": {
+        "title": "Android application architecture",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-003",
+      "row": {
+        "title": "SwiftUI layout reference",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-004",
+      "row": {
+        "title": "Vue.js component guide",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-005",
+      "row": {
+        "title": "Tailwind utility classes",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-006",
+      "row": {
+        "title": "FastAPI authentication examples",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-007",
+      "row": {
+        "title": "JVM garbage collection",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-008",
+      "row": {
+        "title": "Goroutine patterns",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-009",
+      "row": {
+        "title": "Rust programming for beginners",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-010",
+      "row": {
+        "title": "C++ standard library",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-011",
+      "row": {
+        "title": "PostgreSQL performance tuning",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-012",
+      "row": {
+        "title": "Docker networking",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-013",
+      "row": {
+        "title": "Git rebase explained",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-014",
+      "row": {
+        "title": "Playwright test isolation",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-015",
+      "row": {
+        "title": "OAuth authorization flow",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-016",
+      "row": {
+        "title": "GraphQL schema design",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-017",
+      "row": {
+        "title": "二叉树遍历方法",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-018",
+      "row": {
+        "title": "Linux命令速查",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-019",
+      "row": {
+        "title": "Godot game development",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-020",
+      "row": {
+        "title": "CSS Grid 布局示例",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-021",
+      "row": {
+        "title": "Spring Boot 配置入门",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-022",
+      "row": {
+        "title": "SQL注入原理介绍",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-023",
+      "row": {
+        "title": "大语言模型基础知识",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-024",
+      "row": {
+        "title": "Machine learning overview",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-025",
+      "row": {
+        "title": "ChatGPT 使用技巧",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-026",
+      "row": {
+        "title": "Stable Diffusion 安装教程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-027",
+      "row": {
+        "title": "AI Agent 工作流",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-028",
+      "row": {
+        "title": "Prompt engineering patterns",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-029",
+      "row": {
+        "title": "Ollama 本地运行",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-030",
+      "row": {
+        "title": "机器学习数据集清单",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    },
+    {
+      "id": "case-031",
+      "row": {
+        "title": "Figma component variants",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-032",
+      "row": {
+        "title": "品牌视觉设计案例",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-033",
+      "row": {
+        "title": "Typography principles",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-034",
+      "row": {
+        "title": "Lightroom 调色流程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-035",
+      "row": {
+        "title": "视频剪辑教程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-036",
+      "row": {
+        "title": "Blender modeling basics",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-037",
+      "row": {
+        "title": "Creative writing exercises",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-038",
+      "row": {
+        "title": "设计素材合集",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-039",
+      "row": {
+        "title": "可商用字体推荐",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-040",
+      "row": {
+        "title": "Obsidian 笔记组织",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-041",
+      "row": {
+        "title": "Excel 数据处理",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-042",
+      "row": {
+        "title": "PowerPoint 演示技巧",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-043",
+      "row": {
+        "title": "PDF合并操作",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-044",
+      "row": {
+        "title": "番茄钟计时器",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-045",
+      "row": {
+        "title": "腾讯会议录制说明",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-046",
+      "row": {
+        "title": "Zapier workflows",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-047",
+      "row": {
+        "title": "Cloud storage comparison",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-048",
+      "row": {
+        "title": "Email client guide",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-049",
+      "row": {
+        "title": "Online course introduction",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-050",
+      "row": {
+        "title": "IELTS reading practice",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-051",
+      "row": {
+        "title": "Literature review checklist",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-052",
+      "row": {
+        "title": "百科全书条目",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-053",
+      "row": {
+        "title": "公务员考试备考",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-054",
+      "row": {
+        "title": "线性代数讲义",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-055",
+      "row": {
+        "title": "读书笔记整理",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-056",
+      "row": {
+        "title": "Language learning methods",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-057",
+      "row": {
+        "title": "SEO keyword research",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-058",
+      "row": {
+        "title": "公众号运营计划",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-059",
+      "row": {
+        "title": "跨境电商选品案例",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-060",
+      "row": {
+        "title": "商业模式画布",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-061",
+      "row": {
+        "title": "Resume template collection",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-062",
+      "row": {
+        "title": "供应链管理流程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-063",
+      "row": {
+        "title": "劳动合同范本",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-064",
+      "row": {
+        "title": "Digital marketing metrics",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-065",
+      "row": {
+        "title": "股票估值方法",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经"
+    },
+    {
+      "id": "case-066",
+      "row": {
+        "title": "ETF portfolio guide",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经"
+    },
+    {
+      "id": "case-067",
+      "row": {
+        "title": "费用报销流程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经"
+    },
+    {
+      "id": "case-068",
+      "row": {
+        "title": "Macroeconomics introduction",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经"
+    },
+    {
+      "id": "case-069",
+      "row": {
+        "title": "家庭预算规划",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经"
+    },
+    {
+      "id": "case-070",
+      "row": {
+        "title": "保险理赔流程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经"
+    },
+    {
+      "id": "case-071",
+      "row": {
+        "title": "Tax return checklist",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经"
+    },
+    {
+      "id": "case-072",
+      "row": {
+        "title": "家常菜菜谱",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-073",
+      "row": {
+        "title": "健康科普指南",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-074",
+      "row": {
+        "title": "Strength training basics",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-075",
+      "row": {
+        "title": "家电维修教程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-076",
+      "row": {
+        "title": "Parenting tips",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-077",
+      "row": {
+        "title": "宠物护理手册",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-078",
+      "row": {
+        "title": "公积金查询指南",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-079",
+      "row": {
+        "title": "商品比价工具",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-080",
+      "row": {
+        "title": "Recipe for tomato soup",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "生活与服务"
+    },
+    {
+      "id": "case-081",
+      "row": {
+        "title": "京都旅游攻略",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "旅行与出行"
+    },
+    {
+      "id": "case-082",
+      "row": {
+        "title": "Flight booking guide",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "旅行与出行"
+    },
+    {
+      "id": "case-083",
+      "row": {
+        "title": "酒店预订说明",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "旅行与出行"
+    },
+    {
+      "id": "case-084",
+      "row": {
+        "title": "Visa application documents",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "旅行与出行"
+    },
+    {
+      "id": "case-085",
+      "row": {
+        "title": "Hiking trail map",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "旅行与出行"
+    },
+    {
+      "id": "case-086",
+      "row": {
+        "title": "Movie review archive",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "影音与娱乐"
+    },
+    {
+      "id": "case-087",
+      "row": {
+        "title": "吉他谱合集",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "影音与娱乐"
+    },
+    {
+      "id": "case-088",
+      "row": {
+        "title": "游戏攻略合集",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "影音与娱乐"
+    },
+    {
+      "id": "case-089",
+      "row": {
+        "title": "Anime review archive",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "影音与娱乐"
+    },
+    {
+      "id": "case-090",
+      "row": {
+        "title": "Podcasts directory",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "影音与娱乐"
+    },
+    {
+      "id": "case-091",
+      "row": {
+        "title": "Breaking news summary",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "新闻与资讯"
+    },
+    {
+      "id": "case-092",
+      "row": {
+        "title": "科技资讯周报",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "新闻与资讯"
+    },
+    {
+      "id": "case-093",
+      "row": {
+        "title": "Local news roundup",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "新闻与资讯"
+    },
+    {
+      "id": "case-094",
+      "row": {
+        "title": "产品需求文档模板",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "产品与项目"
+    },
+    {
+      "id": "case-095",
+      "row": {
+        "title": "User research interview guide",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "产品与项目"
+    },
+    {
+      "id": "case-096",
+      "row": {
+        "title": "Project management handbook",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "产品与项目"
+    },
+    {
+      "id": "case-097",
+      "row": {
+        "title": "Product analytics basics",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "产品与项目"
+    },
+    {
+      "id": "case-098",
+      "row": {
+        "title": "",
+        "url": "https://arxiv.org/abs/1234.5678",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-099",
+      "row": {
+        "title": "Welcome",
+        "url": "https://www.coursera.org/learn/whatever",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-100",
+      "row": {
+        "title": "",
+        "url": "https://en.wikipedia.org/wiki/Example",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-101",
+      "row": {
+        "title": "Images",
+        "url": "https://unsplash.com/photos/example",
+        "folder": ""
+      },
+      "expectedCategory": "内容与设计"
+    },
+    {
+      "id": "case-102",
+      "row": {
+        "title": "Notes",
+        "url": "https://www.notion.so/example",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-103",
+      "row": {
+        "title": "",
+        "url": "https://www.12306.cn/index/",
+        "folder": ""
+      },
+      "expectedCategory": "旅行与出行"
+    },
+    {
+      "id": "case-104",
+      "row": {
+        "title": "Home",
+        "url": "https://open.spotify.com/",
+        "folder": ""
+      },
+      "expectedCategory": "影音与娱乐"
+    },
+    {
+      "id": "case-105",
+      "row": {
+        "title": "Hello",
+        "url": "https://docs.github.com/actions/using-workflows",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-106",
+      "row": {
+        "title": "帮助",
+        "url": "https://support.microsoft.com/zh-cn/excel/pivot",
+        "folder": ""
+      },
+      "expectedCategory": "效率与工具"
+    },
+    {
+      "id": "case-107",
+      "row": {
+        "title": "How to begin",
+        "url": "https://example.org/item",
+        "folder": "资料 / Python"
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-108",
+      "row": {
+        "title": "培训资料",
+        "url": "https://example.org/item",
+        "folder": "工作 / 招聘"
+      },
+      "expectedCategory": "运营与商业"
+    },
+    {
+      "id": "case-109",
+      "row": {
+        "title": "Python 家庭预算",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "ambiguous"
+    },
+    {
+      "id": "case-110",
+      "row": {
+        "title": "AI Agent 股票估值",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "ambiguous"
+    },
+    {
+      "id": "case-111",
+      "row": {
+        "title": "Figma Project management",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "ambiguous"
+    },
+    {
+      "id": "case-112",
+      "row": {
+        "title": "React 在线课程",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "ambiguous"
+    },
+    {
+      "id": "case-113",
+      "row": {
+        "title": "Android online course",
+        "url": "https://coursera.org/learn/android",
+        "folder": ""
+      },
+      "expectedCategory": "学习与研究"
+    },
+    {
+      "id": "case-114",
+      "row": {
+        "title": "大语言模型研究",
+        "url": "https://arxiv.org/abs/1234",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "ambiguous"
+    },
+    {
+      "id": "case-115",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://github.com/example/project",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-116",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://zhihu.com/question/123",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-117",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://www.youtube.com/watch?v=123",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-118",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://bilibili.com/video/123",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-119",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://example.org/?q=python&token=secret",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-120",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://github.com.evil.example/actions",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-121",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://www.coursera.org.evil.test/course",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-122",
+      "row": {
+        "title": "收藏的页面",
+        "url": "https://docs.github.com/actions-evil/thing",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-123",
+      "row": {
+        "title": "Mail and train schedule",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-124",
+      "row": {
+        "title": "Airmail explained",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-125",
+      "row": {
+        "title": "Reactivation checklist",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-126",
+      "row": {
+        "title": "A question",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-127",
+      "row": {
+        "title": "收藏夹",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-128",
+      "row": {
+        "title": "",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-129",
+      "row": {
+        "title": "Cargo shipping routes",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-130",
+      "row": {
+        "title": "Introduction to artificial flowers",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-131",
+      "row": {
+        "title": "Commentary on taxes",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-132",
+      "row": {
+        "title": "资料",
+        "url": "https://example.org/?topic=android#python",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-133",
+      "row": {
+        "title": "JavaScript examples",
+        "url": "not-a-url",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-134",
+      "row": {
+        "title": "Python links",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "settings": {
+        "enabled": false
+      },
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-135",
+      "row": {
+        "title": "Python links",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "settings": {
+        "disabledRuleIds": [
+          "dev-python"
+        ]
+      },
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-136",
+      "row": {
+        "title": "Python 发票处理",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "个人事务",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-invoices",
+            "name": "我的报销资料",
+            "enabled": true,
+            "field": "title",
+            "operator": "contains",
+            "value": "发票",
+            "category": "个人事务",
+            "subcategory": "报销",
+            "tags": [
+              "报销"
+            ],
+            "priority": 10
+          }
+        ]
+      },
+      "expectedSource": "user-rule",
+      "expectedSubcategory": "报销"
+    },
+    {
+      "id": "case-137",
+      "row": {
+        "title": "发票整理",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-invoices",
+            "name": "我的报销资料",
+            "enabled": true,
+            "field": "title",
+            "operator": "contains",
+            "value": "发票",
+            "category": "个人事务",
+            "subcategory": "报销",
+            "tags": [
+              "报销"
+            ],
+            "priority": 10
+          },
+          {
+            "id": "custom-invoice-two",
+            "name": "我的报销资料",
+            "enabled": true,
+            "field": "title",
+            "operator": "contains",
+            "value": "发票",
+            "category": "工作资料",
+            "subcategory": "报销",
+            "tags": [
+              "报销"
+            ],
+            "priority": 10
+          }
+        ]
+      },
+      "expectedStatus": "ambiguous"
+    },
+    {
+      "id": "case-138",
+      "row": {
+        "title": "发票整理",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "工作资料",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-invoices",
+            "name": "我的报销资料",
+            "enabled": true,
+            "field": "title",
+            "operator": "contains",
+            "value": "发票",
+            "category": "个人事务",
+            "subcategory": "报销",
+            "tags": [
+              "报销"
+            ],
+            "priority": 10
+          },
+          {
+            "id": "custom-invoice-two",
+            "name": "我的报销资料",
+            "enabled": true,
+            "field": "title",
+            "operator": "contains",
+            "value": "发票",
+            "category": "工作资料",
+            "subcategory": "报销",
+            "tags": [
+              "报销"
+            ],
+            "priority": 20
+          }
+        ]
+      },
+      "expectedSource": "user-rule"
+    },
+    {
+      "id": "case-139",
+      "row": {
+        "title": "发票整理",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "金融与财经",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-invoices",
+            "name": "我的报销资料",
+            "enabled": false,
+            "field": "title",
+            "operator": "contains",
+            "value": "发票",
+            "category": "个人事务",
+            "subcategory": "报销",
+            "tags": [
+              "报销"
+            ],
+            "priority": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "case-140",
+      "row": {
+        "title": "普通页面",
+        "url": "https://docs.example.net/a",
+        "folder": ""
+      },
+      "expectedCategory": "个人资料",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-domain",
+            "name": "站点规则",
+            "enabled": true,
+            "field": "domain",
+            "operator": "contains",
+            "value": "example.net",
+            "category": "个人资料",
+            "subcategory": "资料",
+            "tags": [],
+            "priority": 0
+          }
+        ]
+      },
+      "expectedSource": "user-rule"
+    },
+    {
+      "id": "case-141",
+      "row": {
+        "title": "普通页面",
+        "url": "https://example.net.evil.test/a",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-domain",
+            "name": "站点规则",
+            "enabled": true,
+            "field": "domain",
+            "operator": "contains",
+            "value": "example.net",
+            "category": "个人资料",
+            "subcategory": "资料",
+            "tags": [],
+            "priority": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "case-142",
+      "row": {
+        "title": "普通页面",
+        "url": "https://docs.example.net/a",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-domain",
+            "name": "站点规则",
+            "enabled": true,
+            "field": "domain",
+            "operator": "equals",
+            "value": "example.net",
+            "category": "个人资料",
+            "subcategory": "资料",
+            "tags": [],
+            "priority": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "case-143",
+      "row": {
+        "title": "Mail train daily",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-ai",
+            "name": "独立AI词",
+            "field": "title",
+            "operator": "contains",
+            "value": "AI",
+            "category": "AI自选",
+            "subcategory": "其他",
+            "tags": [],
+            "priority": 0
+          }
+        ]
+      }
+    },
+    {
+      "id": "case-144",
+      "row": {
+        "title": "AI tools",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "AI自选",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-ai",
+            "name": "独立AI词",
+            "field": "title",
+            "operator": "contains",
+            "value": "AI",
+            "category": "AI自选",
+            "subcategory": "其他",
+            "tags": [],
+            "priority": 0
+          }
+        ]
+      },
+      "expectedSource": "user-rule"
+    },
+    {
+      "id": "case-145",
+      "row": {
+        "title": "普通页面",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "settings": {
+        "userRules": [
+          {
+            "id": "custom-invoices",
+            "name": "我的报销资料",
+            "enabled": true,
+            "field": "regex",
+            "operator": "contains",
+            "value": ".*",
+            "category": "个人事务",
+            "subcategory": "报销",
+            "tags": [
+              "报销"
+            ],
+            "priority": 10
+          }
+        ]
+      }
+    },
+    {
+      "id": "case-146",
+      "row": {
+        "title": "Python and PostgreSQL",
+        "url": "https://example.org/item",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发",
+      "expectedSubcategory": "综合主题"
+    },
+    {
+      "id": "case-147",
+      "row": {
+        "title": "How to react to criticism",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-148",
+      "row": {
+        "title": "Claude Monet paintings",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-149",
+      "row": {
+        "title": "Claude Debussy biography",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-150",
+      "row": {
+        "title": "Python snake care guide",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-151",
+      "row": {
+        "title": "How to excel at baking",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "待分类",
+      "expectedStatus": "unclassified"
+    },
+    {
+      "id": "case-152",
+      "row": {
+        "title": "AndroidStudio 配置指南",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-153",
+      "row": {
+        "title": "ScrollView 布局方式",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "编程开发"
+    },
+    {
+      "id": "case-154",
+      "row": {
+        "title": "AI tools directory",
+        "url": "https://example.org/article",
+        "folder": ""
+      },
+      "expectedCategory": "AI与智能工具"
+    }
+  ]
+}

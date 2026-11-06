@@ -1,0 +1,24 @@
+node_modules/
+.env
+.env.*
+*.pem
+*.key
+*.log
+.DS_Store
+test-results/
+playwright-report/
+artifacts/
+dist/
+*.zip
+*.sqlite*
+*.db
+*.bak
+*.har
+Bookmarks*
+Local State
+Default/
+Profile */
+private/
+personal/
+assets/
+
