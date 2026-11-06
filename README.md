@@ -4,9 +4,9 @@
 
 这是 **0.5.0 Beta**。点击扩展图标打开收藏空间，不替换新标签页。不接 AI 也能使用；无需部署服务器或安装数据库。
 
-[![收藏图谱实录：分类展开到具体文章，再查看详情](docs/graph-demo.gif)](https://github.com/chyc20210823/bookmark-space/blob/main/docs/walkthrough.mp4)
+[![收藏图谱实录：分类展开到具体文章，再查看详情](docs/graph-demo.gif)](https://github.com/chyc20210823/bookmark-space/raw/refs/heads/main/docs/walkthrough.mp4)
 
-**[观看完整操作视频（约 25 秒）](https://github.com/chyc20210823/bookmark-space/blob/main/docs/walkthrough.mp4)** · [安装方法](#安装) · [配置 AI](#配置-ai) · [隐私说明](PRIVACY.md)
+**[下载完整操作视频（MP4，约 26 秒）](https://github.com/chyc20210823/bookmark-space/raw/refs/heads/main/docs/walkthrough.mp4)** · [安装方法](#安装) · [配置 AI](#配置-ai) · [隐私说明](PRIVACY.md)
 
 动态图和视频均来自真实插件操作，使用 22 条公开网站组成的示例收藏，不含个人书签或 Key。演示采用本机规则，没有调用 AI。安装后显示你自己的浏览器收藏。
 

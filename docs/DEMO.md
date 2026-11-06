@@ -26,4 +26,4 @@ ffmpeg -i artifacts/demo/walkthrough.webm -ss 0.7 -c:v libx264 -pix_fmt yuv420p 
 ffmpeg -ss 2.8 -t 10.3 -i artifacts/demo/walkthrough.webm -filter_complex "[0:v]fps=12,scale=960:-1:flags=lanczos,split[a][b];[a]palettegen=stats_mode=diff[p];[b][p]paletteuse=dither=bayer:bayer_scale=3" -loop 0 docs/graph-demo.gif
 ```
 
-视频无配音、无后期功能演绎。GIF 用于 README 自动播放预览，MP4 用于查看完整操作。发布前检查每张截图及视频，确认没有个人收藏、密钥、账号信息或私人路径。不要录制自己的日常浏览器再直接上传。
+视频无配音、无后期功能演绎。GIF 用于 README 自动播放预览，MP4 提供完整操作录像下载。发布前检查每张截图及视频，确认没有个人收藏、密钥、账号信息或私人路径。不要录制自己的日常浏览器再直接上传。
